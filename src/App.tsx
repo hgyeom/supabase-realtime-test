@@ -17,17 +17,6 @@ function App() {
     setName(e.target.value);
   };
 
-  const posts = supabase
-    .channel('custom-channel')
-    .on(
-      'postgres_changes',
-      { event: '*', schema: 'public', table: 'posts' },
-      (payload) => {
-        setSubMessage(payload.new);
-      }
-    )
-    .subscribe();
-
   const sendMessage = async () => {
     if (!title || !name) {
       return;
@@ -47,6 +36,17 @@ function App() {
       console.log('error', e);
     }
   };
+
+  const posts = supabase
+    .channel('custom-channel')
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'posts' },
+      (payload) => {
+        setSubMessage(payload.new);
+      }
+    )
+    .subscribe();
 
   return (
     <div style={{ height: '800px', display: 'flex' }}>
